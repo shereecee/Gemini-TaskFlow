@@ -34,7 +34,7 @@ export default function CameraScreen() {
     const result = await cameraRef.current.takePictureAsync({ quality: 0.7 });
     router.push({
       pathname: "/preview",
-      params: { photoUri: result.uri },
+      params: { photoUri: encodeURIComponent(result.uri) },
     });
   }
 

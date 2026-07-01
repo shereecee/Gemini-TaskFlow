@@ -13,7 +13,8 @@ import { imageToBase64 } from "../lib/gemini";
 export default function PreviewScreen() {
   const router = useRouter();
   const { photoUri } = useLocalSearchParams();
-  const previewUri = Array.isArray(photoUri) ? photoUri[0] : photoUri;
+  const rawPreviewUri = Array.isArray(photoUri) ? photoUri[0] : photoUri;
+  const previewUri = rawPreviewUri ? decodeURIComponent(rawPreviewUri) : null;
   const [loadingMode, setLoadingMode] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -39,7 +40,15 @@ export default function PreviewScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: previewUri }} style={styles.preview} />
+      {previewUri ? (
+        <Image source={{ uri: previewUri }} style={styles.preview} />
+      ) : (
+        <View style={styles.previewFallback}>
+          <Text style={styles.previewFallbackText}>
+            Preview image not available.
+          </Text>
+        </View>
+      )}
       {loadingMode ? (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size="large" color="#FFFFFF" />
@@ -105,6 +114,16 @@ const styles = StyleSheet.create({
   preview: {
     flex: 1,
     resizeMode: "contain",
+  },
+  previewFallback: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#111827",
+  },
+  previewFallbackText: {
+    color: "#E5E7EB",
+    fontSize: 16,
   },
   loadingOverlay: {
     position: "absolute",
