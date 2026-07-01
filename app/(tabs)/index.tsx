@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
+import { useRouter } from 'expo-router';
 
 // Core State/Database Link
 import { supabase } from '../../lib/supabase';
@@ -13,6 +14,7 @@ import AddTaskModal from '../../components/AddTaskModal';
 export default function App() {
   const [tasks, setTasks] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     loadTasks();
@@ -82,12 +84,14 @@ export default function App() {
       {/* Top App Header Section Layout Row */}
       <View style={headerStyles.headerRow}>
         <Text style={headerStyles.headerTitle}>TaskFlow</Text>
-        <TouchableOpacity 
-          style={headerStyles.openButton} 
-          onPress={() => setModalVisible(true)}
-        >
-          <MaterialIcons name="add-task" size={24} color="#FFF" />
-        </TouchableOpacity>
+        <View style={headerStyles.actions}>
+          <TouchableOpacity style={headerStyles.cameraButton} onPress={() => router.push('/camera')}>
+            <MaterialIcons name="photo-camera" size={22} color="#1E293B" />
+          </TouchableOpacity>
+          <TouchableOpacity style={headerStyles.openButton} onPress={() => setModalVisible(true)}>
+            <MaterialIcons name="add-task" size={24} color="#FFF" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Render optimized dynamic lists */}
@@ -115,7 +119,7 @@ const headerStyles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'between',
+    justifyContent: 'space-between',
     paddingBottom: 16,
     marginBottom: 16,
     borderBottomWidth: 1,
@@ -134,6 +138,21 @@ const headerStyles = StyleSheet.create({
     borderRadius: 23,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  actions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  cameraButton: {
+    backgroundColor: '#FFFFFF',
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
   }
 });
 
