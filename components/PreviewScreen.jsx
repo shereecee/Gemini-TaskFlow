@@ -1,10 +1,22 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { imageToBase64 } from "../lib/gemini";
 
 export default function PreviewScreen() {
   const router = useRouter();
   const { photoUri } = useLocalSearchParams();
   const previewUri = Array.isArray(photoUri) ? photoUri[0] : photoUri;
+
+  async function handleAnalyze() {
+    if (!previewUri) return;
+
+    const base64Image = await imageToBase64(previewUri);
+    console.log(base64Image.length);
+    router.push({
+      pathname: "/result",
+      params: { base64Image },
+    });
+  }
 
   return (
     <View style={styles.container}>
@@ -16,15 +28,7 @@ export default function PreviewScreen() {
         >
           <Text style={styles.buttonText}>Retake</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.analyzeButton}
-          onPress={() =>
-            router.push({
-              pathname: "/result",
-              params: { photoUri: previewUri },
-            })
-          }
-        >
+        <TouchableOpacity style={styles.analyzeButton} onPress={handleAnalyze}>
           <Text style={styles.buttonText}>Analyze</Text>
         </TouchableOpacity>
       </View>
