@@ -115,7 +115,13 @@ export default function ResultScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {previewSource ? (
-        <Image source={previewSource} style={styles.resultImage} />
+        <View style={styles.imagePanel}>
+          <Image
+            source={previewSource}
+            style={styles.resultImage}
+            resizeMode="contain"
+          />
+        </View>
       ) : null}
 
       <View style={styles.card}>
@@ -162,10 +168,17 @@ const styles = StyleSheet.create({
   resultImage: {
     width: "100%",
     height: 260,
+    backgroundColor: "#E5E7EB",
+  },
+  imagePanel: {
+    width: "100%",
+    height: 260,
     borderRadius: 20,
     marginBottom: 16,
     backgroundColor: "#E5E7EB",
-    resizeMode: "contain",
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
   },
   card: {
     backgroundColor: "#F8FAFC",
